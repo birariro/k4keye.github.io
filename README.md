@@ -97,6 +97,8 @@ JIRA, Slack, Git, GitFlow, 코드 리뷰, 회의 회고 등을 회사에 도입�
 실제 기업을 대상으로 진행하는 프로젝트를<br/>
 PM으로 진행하면서 3개의 파트 팀으로 구성되어 하나의 목표를 위해 협력하며 결과를 도출해내는 경험을 하였습니다.<br/>
 
+![20210328_162501](https://user-images.githubusercontent.com/52993842/112745307-46e92f00-8fe2-11eb-8d54-cabcf48e5387.png)
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/52993842/110572859-95eb3380-819d-11eb-8593-3c82212ec44a.png">
 </p> 
