@@ -30,9 +30,9 @@ ___
 2021-02-23 Kotlin 기초 문법 공부 
 
 ## Android 
-2021-02-22 Androidx ViewModel ,LiveData 공부
-2021-04-10 Android FCM 적용
-2021-04-15 Android Theme 적용 공부
+2021-02-22 Androidx ViewModel ,LiveData 공부<br/>
+2021-04-10 Android FCM 적용<br/>
+2021-04-15 Android Theme 적용 공부<br/>
 
 
 ## 도구 제작
@@ -41,5 +41,5 @@ ___
 
 
 ## 문화
-2021-01-20 JIRA를 통한 이슈 트레킹 및 코드리뷰 등 사내에 적용
-2021-03-04 회사에 특징에 맞춰 조금 변형된 깃플로우를 사내에 적용
+2021-01-20 JIRA를 통한 이슈 트레킹 및 코드리뷰 등 사내에 적용<br/>
+2021-03-04 회사에 특징에 맞춰 조금 변형된 깃플로우를 사내에 적용<br/>
