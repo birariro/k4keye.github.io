@@ -31,6 +31,8 @@ ___
 
 ## Android 
 2021-02-22 Androidx ViewModel ,LiveData 공부
+2021-04-10 Android FCM 적용
+2021-04-15 Android Theme 적용 공부
 
 
 ## 도구 제작
