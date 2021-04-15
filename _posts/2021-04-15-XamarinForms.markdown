@@ -9,17 +9,17 @@ categories : Survival
 <br/>
 
 여기에 작성되는 내용은 XamarinForm 을 통해 Android를 개발하면서 <br/>
-나중에 필요할때 다시 찾기도하고 <br/>
-다음사람이 왔을때 내가 같이 없을때 헤매지 않게 하기위한 내용이다. <br/>
+나중에 필요할 때 다시 찾기도 하고 <br/>
+다음 사람이 왔을 때 내가 같이 없는 경우 헤매지 않게 하기 위한 내용이다.<br/>
 <br/>
 <br/>
 
 
 
 # 1. 데이터 관리 
-같은 포멧의 데이터를 한곳에서 관리하지않고 이곳저곳에서 하드코딩하여 사용하다보면 <br/>
+같은 포맷의 데이터를 한곳에서 관리하지 않고 이곳저곳에서 하드코딩하여 사용하다 보면 <br/>
 간단하게 변경하려할때도 위치를 찾아야하고 <br/>
-큰 변경있을때는 매우 힘들어진다. <br/>
+큰 변경 있을 때는 매우 힘들어진다.<br/>
 그래서 같은 포멧의 데이터는 한곳에서 관리하고 다른곳에서 참조하여 사용하게 하는것이 좋다.<br/><br/>
 ~[1.1 static readonly로 문자열 관리](https://github.com/k4keye/XamarinDocument/blob/main/1/ReadonlyString.md)~<br/>
 [1.2 Resources파일로 문자열 관리](https://github.com/k4keye/XamarinDocument/blob/main/1/Resources.md) <br/>
@@ -33,7 +33,7 @@ MVVM으로 개발을 하는 방법을 기록할것이다.<br/><br/>
 
 #  3. Null 체크
 개발을 하면서 Null로 인한 문제가 많이 발생한다.<br/>
-사용자에게 입력받는 Control 에서도 발생하고 예상하지못한 로직에서 Null이 발생한다<br/>
+사용자에게 입력받는 Control에서도 발생하고 예상하지 못한 로직에서 Null이 발생한다<br/>
 따라서 흐름에있어 중요한 부분은 반드시 Null체크를 해야한다.<br/><br/>
 [3.1 ControlNullCheck](https://github.com/k4keye/XamarinDocument/blob/main/3/ControlNullCheck.md)  <br/>
 
