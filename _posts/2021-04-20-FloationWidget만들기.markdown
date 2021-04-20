@@ -1,9 +1,9 @@
 ---
 layout: post
-title: AWS 서버 아키텍처 구축하기 - 1
+title: Android FloationWidget 구현하기
 author: k4keye
-date: 2020-12-30
-categories : AWS
+date: 2021-04-20
+categories : Android
 ---
 <br/>
 <br/>
