@@ -1,0 +1,184 @@
+I"2U<p><br />
+<br /></p>
+
+<h1 id="요구사항">요구사항</h1>
+<hr />
+<p>앱 밖에 표시되는 즉 안드로이드 디바이스 화면 에 표시되는 view를 만들고싶다.
+ <br /></p>
+
+<h1 id="구현-방법">구현 방법</h1>
+<hr />
+<ol>
+  <li>화면위에 그리기 원한을 사용한다.</li>
+  <li>서비스에서 view를 호출한다.</li>
+</ol>
+
+<p><br /></p>
+
+<h1 id="구현">구현</h1>
+<hr />
+
+<p><br /></p>
+
+<h2 id="1-권한">1. 권한</h2>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">uses-permission</span> <span class="n">android</span><span class="p">:</span><span class="n">name</span><span class="p">=</span><span class="s">"android.permission.SYSTEM_ALERT_WINDOW"</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="n">uses-permission</span> <span class="n">android</span><span class="p">:</span><span class="n">name</span><span class="p">=</span><span class="s">"android.permission.FOREGROUND_SERVICE"</span> <span class="p">/&gt;</span>
+</code></pre></div></div>
+<p>화면위에 그리기 권한과 <br />
+안드로이드 오레오 이상에서 서비스를 호출하기위한 포그라운드 서비스 등록
+ <br /> <br /></p>
+
+<h2 id="2-권한획득-및-서비스-호출">2. 권한획득 및 서비스 호출</h2>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MainActivity</span> <span class="p">:</span> <span class="nc">AppCompatActivity</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="kd">val</span> <span class="py">serviceIntent</span> <span class="k">by</span> <span class="nf">lazy</span> <span class="p">{</span>  <span class="nc">Intent</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nc">ImmortalService</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">)</span>  <span class="p">}</span>
+    <span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
+        <span class="k">private</span> <span class="k">const</span> <span class="kd">val</span> <span class="py">ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE</span> <span class="p">=</span> <span class="mi">1004</span>
+    <span class="p">}</span>
+
+    <span class="nd">@RequiresApi</span><span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">M</span><span class="p">)</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onCreate</span><span class="p">(</span><span class="n">savedInstanceState</span><span class="p">:</span> <span class="nc">Bundle</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">.</span><span class="nf">onCreate</span><span class="p">(</span><span class="n">savedInstanceState</span><span class="p">)</span>
+        <span class="nf">setContentView</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">activity_main</span><span class="p">)</span>
+        <span class="nf">checkPermission</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="nd">@RequiresApi</span><span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">M</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">fun</span> <span class="nf">checkPermission</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">when</span><span class="p">{</span>
+            <span class="nc">Settings</span><span class="p">.</span><span class="nf">canDrawOverlays</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">{</span>
+                <span class="nf">callService</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="k">else</span><span class="p">-&gt;{</span>
+                <span class="nf">permissionPopup</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+    <span class="nd">@RequiresApi</span><span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">M</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">fun</span> <span class="nf">permissionPopup</span><span class="p">(){</span>
+        <span class="nc">AlertDialog</span><span class="p">.</span><span class="nc">Builder</span><span class="p">(</span><span class="k">this</span><span class="nd">@MainActivity</span><span class="p">)</span>
+                <span class="p">.</span><span class="nf">setTitle</span><span class="p">(</span><span class="s">"권한이 필요합니다."</span><span class="p">)</span>
+                <span class="p">.</span><span class="nf">setMessage</span><span class="p">(</span><span class="s">"화면위의 그리기 권한이 필요"</span><span class="p">)</span>
+                <span class="p">.</span><span class="nf">setPositiveButton</span><span class="p">(</span><span class="s">"확인"</span><span class="p">)</span> <span class="p">{</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="p">-&gt;</span>
+                    <span class="kd">val</span> <span class="py">intent</span> <span class="p">=</span> <span class="nc">Intent</span><span class="p">(</span><span class="nc">Settings</span><span class="p">.</span><span class="nc">ACTION_MANAGE_OVERLAY_PERMISSION</span><span class="p">,</span> 
+                                        <span class="nc">Uri</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="s">"package:$packageName"</span><span class="p">))</span>
+                    <span class="nf">startActivityForResult</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span> 
+                                        <span class="nc">ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="p">.</span><span class="nf">setNegativeButton</span><span class="p">(</span><span class="s">"취소"</span><span class="p">)</span> <span class="p">{</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="p">-&gt;</span> <span class="p">}</span>
+                <span class="p">.</span><span class="nf">create</span><span class="p">().</span><span class="nf">show</span><span class="p">()</span>
+
+    <span class="p">}</span>
+    <span class="k">private</span> <span class="k">fun</span> <span class="nf">callService</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION</span><span class="p">.</span><span class="nc">SDK_INT</span> <span class="p">&gt;=</span> <span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">O</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nf">startForegroundService</span><span class="p">(</span><span class="n">serviceIntent</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nf">startService</span><span class="p">(</span><span class="n">serviceIntent</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nd">@RequiresApi</span><span class="p">(</span><span class="n">api</span> <span class="p">=</span> <span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">M</span><span class="p">)</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onActivityResult</span><span class="p">(</span><span class="n">requestCode</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span> <span class="n">resultCode</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nc">Intent</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">.</span><span class="nf">onActivityResult</span><span class="p">(</span><span class="n">requestCode</span><span class="p">,</span> <span class="n">resultCode</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">requestCode</span> <span class="p">==</span> <span class="nc">ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nf">callService</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>MainActivity에서는 화면위에 그리기 권한과 서비스 호출을 하고있다.
+ <br /> <br /></p>
+<h2 id="3-서비스-구현">3. 서비스 구현</h2>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">ImmortalService</span> <span class="p">:</span> <span class="nc">Service</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onBind</span><span class="p">(</span><span class="n">intent</span><span class="p">:</span> <span class="nc">Intent</span><span class="p">):</span> <span class="nc">IBinder</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onCreate</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">.</span><span class="nf">onCreate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION</span><span class="p">.</span><span class="nc">SDK_INT</span> <span class="p">&gt;=</span> <span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">O</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">val</span> <span class="py">channelID</span> <span class="p">=</span> <span class="s">"채널id"</span>
+            <span class="kd">val</span> <span class="py">strTitle</span> <span class="p">=</span> <span class="s">"타이틀"</span>
+
+            <span class="kd">val</span> <span class="py">notificationManager</span> <span class="p">=</span> <span class="nf">getSystemService</span><span class="p">(</span><span class="nc">NOTIFICATION_SERVICE</span><span class="p">)</span> <span class="k">as</span> <span class="nc">NotificationManager</span>
+            <span class="kd">var</span> <span class="py">channel</span> <span class="p">=</span> <span class="n">notificationManager</span><span class="p">.</span><span class="nf">getNotificationChannel</span><span class="p">(</span><span class="n">channelID</span><span class="p">)</span>
+            <span class="kd">var</span> <span class="py">builder</span><span class="p">:</span> <span class="nc">NotificationCompat</span><span class="p">.</span><span class="nc">Builder</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+            <span class="kd">var</span> <span class="py">notification</span><span class="p">:</span> <span class="nc">Notification</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">channel</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">channel</span> <span class="p">=</span> <span class="nc">NotificationChannel</span><span class="p">(</span>
+                    <span class="n">channelID</span><span class="p">,</span>
+                    <span class="n">strTitle</span><span class="p">,</span>
+                    <span class="nc">NotificationManager</span><span class="p">.</span><span class="nc">IMPORTANCE_HIGH</span>
+                <span class="p">)</span>
+                <span class="n">notificationManager</span><span class="p">.</span><span class="nf">createNotificationChannel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="n">builder</span> <span class="p">=</span> <span class="nc">NotificationCompat</span><span class="p">.</span><span class="nc">Builder</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">channelID</span><span class="p">)</span>
+            <span class="n">builder</span><span class="p">.</span><span class="nf">setSmallIcon</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">mipmap</span><span class="p">.</span><span class="n">ic_launcher</span><span class="p">)</span>
+            <span class="n">builder</span><span class="p">.</span><span class="nf">setContentText</span><span class="p">(</span><span class="s">"노티 텍스트"</span><span class="p">)</span>
+            <span class="n">notification</span> <span class="p">=</span> <span class="n">builder</span><span class="p">.</span><span class="nf">build</span><span class="p">()</span>
+            <span class="n">notificationManager</span><span class="p">.</span><span class="nf">notify</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">notification</span><span class="p">)</span>
+            <span class="nf">startForeground</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">notification</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nf">initView</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">fun</span> <span class="nf">initView</span><span class="p">(){</span>
+        <span class="c1">// inflater 를 사용하여 layout 을 가져오자</span>
+        <span class="kd">val</span> <span class="py">inflate</span> <span class="p">=</span> <span class="nf">getSystemService</span><span class="p">(</span><span class="nc">Context</span><span class="p">.</span><span class="nc">LAYOUT_INFLATER_SERVICE</span><span class="p">)</span> <span class="k">as</span> <span class="nc">LayoutInflater</span>
+        <span class="c1">// 윈도우매니저 설정</span>
+        <span class="kd">val</span> <span class="py">windowManager</span> <span class="p">=</span> <span class="nf">getSystemService</span><span class="p">(</span><span class="nc">WINDOW_SERVICE</span><span class="p">)</span> <span class="k">as</span> <span class="nc">WindowManager</span>
+        <span class="kd">val</span> <span class="py">params</span> <span class="p">=</span> <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">(</span>
+            <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">WRAP_CONTENT</span><span class="p">,</span>
+            <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">WRAP_CONTENT</span><span class="p">,</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION</span><span class="p">.</span><span class="nc">SDK_INT</span> <span class="p">&gt;=</span> <span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">O</span><span class="p">)</span> <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">TYPE_APPLICATION_OVERLAY</span> 
+            <span class="k">else</span> <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">TYPE_SYSTEM_ALERT</span><span class="p">,</span>  <span class="c1">// Android O 이상인 경우 TYPE_APPLICATION_OVERLAY 로 설정</span>
+            
+            <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">FLAG_NOT_FOCUSABLE</span>
+                    <span class="n">or</span> <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">FLAG_NOT_TOUCH_MODAL</span> <span class="n">or</span> <span class="nc">WindowManager</span><span class="p">.</span><span class="nc">LayoutParams</span><span class="p">.</span><span class="nc">FLAG_WATCH_OUTSIDE_TOUCH</span><span class="p">,</span>
+            <span class="nc">PixelFormat</span><span class="p">.</span><span class="nc">TRANSLUCENT</span>
+        <span class="p">)</span>
+        <span class="c1">// 위치 지정</span>
+        <span class="n">params</span><span class="p">.</span><span class="n">gravity</span> <span class="p">=</span> <span class="nc">Gravity</span><span class="p">.</span><span class="nc">LEFT</span> <span class="n">or</span> <span class="nc">Gravity</span><span class="p">.</span><span class="nc">CENTER_VERTICAL</span>
+
+        <span class="c1">// activity_overlay.xml 불러오기</span>
+        <span class="kd">val</span> <span class="py">mView</span> <span class="p">=</span> <span class="n">inflate</span><span class="p">.</span><span class="nf">inflate</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">activity_overlay</span><span class="p">,</span><span class="k">null</span><span class="p">)</span>
+        <span class="kd">val</span> <span class="py">overlayButton</span> <span class="p">:</span><span class="nc">Button</span> <span class="p">=</span> <span class="n">mView</span><span class="p">.</span><span class="nf">findViewById</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">btn</span><span class="p">)</span>
+        <span class="n">overlayButton</span><span class="p">.</span><span class="nf">setOnClickListener</span><span class="p">{</span>
+            <span class="nc">Log</span><span class="p">.</span><span class="nf">d</span><span class="p">(</span><span class="s">"오버레이"</span><span class="p">,</span> <span class="s">"initView: 버튼 클릭"</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">windowManager</span><span class="p">.</span><span class="nf">addView</span><span class="p">(</span><span class="n">mView</span><span class="p">,</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+<p>해당 서비스의 역활은 죽지않는 서비스를 위한 Notification channel 생성과 <br />
+xml 파일을 WindowManager에게 적용시켜 <br />
+앱 밖에 표시되도록 한다. <br />
+ <br /></p>
+<h2 id="4-앱-밖에-표시될-화면">4. 앱 밖에 표시될 화면</h2>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;LinearLayout</span>
+    <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+    <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+    <span class="na">android:orientation=</span><span class="s">"vertical"</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;Button</span>
+        <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:id=</span><span class="s">"@+id/btn"</span>
+        <span class="na">android:text=</span><span class="s">"click"</span>
+        <span class="na">android:textColor=</span><span class="s">"#ffffff"</span>
+        <span class="na">android:layout_marginTop=</span><span class="s">"12dp"</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;/LinearLayout&gt;</span>
+</code></pre></div></div>
+<p><br /> <br /></p>
+<h1 id="결과">결과</h1>
+<hr />
+<p><img src="https://user-images.githubusercontent.com/52993842/115334969-47d34200-a1d7-11eb-9dff-8f6d0804a906.png" alt="image" />
+<img src="https://user-images.githubusercontent.com/52993842/115334983-4dc92300-a1d7-11eb-8608-c20a9b6cc2c6.png" alt="image" /></p>
+
+:ET

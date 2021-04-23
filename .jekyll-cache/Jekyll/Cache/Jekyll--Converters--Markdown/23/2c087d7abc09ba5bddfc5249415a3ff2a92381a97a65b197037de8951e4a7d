@@ -1,0 +1,11 @@
+I"�<h2 id="1-templatemethod-pattern"><strong>1 TemplateMethod Pattern</strong></h2>
+<h3 id="11-templatemethod-pattern탬플릿-메소드-패턴"><strong>1.1 TemplateMethod Pattern(탬플릿 메소드 패턴)</strong></h3>
+<p><br />
+어떤 작업을 처리하는 일련의 프로세스를 정의해두고<br />
+서브 클래스가 프로세스에 필요한 역할을 구현하여<br />
+요청하는 입장에서는 프로세스를 호출만을 하게 하여<br />
+프로세스의 변동이 생겨도 요청하는 입장에서는 변동이 없게 하는 패턴이다.<br />
+​
+동일한 기능은 상위 클래스에서 정의하며 확장 혹은 변화가 발생하는 부분만 서브 클래스에 
+<br />구현한다.<br /></p>
+:ET

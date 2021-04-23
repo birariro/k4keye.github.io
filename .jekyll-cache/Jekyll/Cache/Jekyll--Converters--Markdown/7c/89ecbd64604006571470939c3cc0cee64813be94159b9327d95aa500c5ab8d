@@ -1,0 +1,141 @@
+I"�<p><br />
+<br /></p>
+
+<h1 id="1-서론">1 서론</h1>
+<hr />
+<p>Android 10부터 Dark theme를 지원하기 시작하여<br />
+이제 앱은 기본적으로 밝은 화면, 어두운 화면을 둘 다 제공해야 한다.<br /><br /></p>
+
+<p>해당 글에서는 기본적으로 제공하는 테마에서 원하는 <br />
+color이나 style 등을 적용시키는 방법을 알아볼 것이다.
+<br /><br /></p>
+
+<h1 id="2-android-theme">2 Android Theme</h1>
+<hr />
+<h2 id="21-기본-theme-"><strong>2.1 기본 Theme</strong> <br /></h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;resources xmlns:tools="http://schemas.android.com/tools"&gt;
+    &lt;!-- Base application theme. --&gt;
+    &lt;style name="Theme.TestApp" parent="Theme.MaterialComponents.DayNight.NoActionBar"&gt;
+        &lt;!-- Primary brand color. --&gt;
+        &lt;item name="colorPrimary"&gt;@color/purple_500&lt;/item&gt;
+        &lt;item name="colorPrimaryVariant"&gt;@color/purple_700&lt;/item&gt;
+        &lt;item name="colorOnPrimary"&gt;@color/white&lt;/item&gt;
+        &lt;!-- Secondary brand color. --&gt;
+        &lt;item name="colorSecondary"&gt;@color/teal_200&lt;/item&gt;
+        &lt;item name="colorSecondaryVariant"&gt;@color/teal_700&lt;/item&gt;
+        &lt;item name="colorOnSecondary"&gt;@color/black&lt;/item&gt;
+        &lt;!-- Status bar color. --&gt;
+        &lt;item name="android:statusBarColor" tools:targetApi="l"&gt;?attr/colorPrimaryVariant&lt;/item&gt;
+        &lt;!-- Customize your theme here. --&gt;
+
+    &lt;/style&gt;
+&lt;/resources&gt;
+</code></pre></div></div>
+<p>Android 프로젝트를 생성하면 이제는 위와 같은 Theme를 제공한다.<br />
+colorPrimary, textColorPrimary, windowBackground, navigationBarColor 등등<br />
+머티리얼 테마에서 미리 정의가 되어있는 item을 기본 상태로 사용할 수도 있고<br />
+재정의하여 원하는 색으로 적용할 수 있다.<br /><br /></p>
+
+<p>이것이 가능한 이유는<br />
+안드로이드에서 특정 위치의 색상이 직접 기입된 것이 아니라<br />
+위에서 보이는 테마의 속성을 참조하도록 하였기 때문이다.
+<br /><br /></p>
+
+<h2 id="22-테마에-해당하는-color파일-생성하기"><strong>2.2 테마에 해당하는 Color파일 생성하기</strong><br /></h2>
+
+<p>다크모드 , 라이트 모드 에 해당하는 Color 을 배치하는 방법은 간단하다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/res/values
+</code></pre></div></div>
+<p>기본적으로 color이나 style 파일을 저장하는 values 폴더는 밝은 테마가 기본이며 <br />
+<br /></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/res/values-night
+</code></pre></div></div>
+<p>values-night 폴더에 들어가는 같은 이름의 color , style는 다크 테마에 적용된다.
+<br /><br /></p>
+
+<h2 id="23-테마에-해당하는-image파일-생성하기-"><strong>2.3 테마에 해당하는 Image파일 생성하기</strong> <br /></h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>darwable-hdpi
+</code></pre></div></div>
+<p>위와 같이 기본으로 제공되는 폴더는 밝은 테마에 적용이 되는 이미지이다. <br />
+<br /></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>darwable-night-hdpi
+</code></pre></div></div>
+<p>darwable-night 폴더에 들어가는 같은 이름의 Image 는 다크 테마에 적용된다. <br /></p>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/114807402-4d004d80-9de1-11eb-8b08-c15371694a86.png" />
+</p>
+<p>위처럼 각 해당하는 폴더에 이미지를 넣으면 테마에 맞춰 적용된다.
+<br /><br /></p>
+
+<h2 id="24-기본-테마-수정하기-"><strong>2.4 기본 테마 수정하기</strong> <br /></h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;resources xmlns:tools="http://schemas.android.com/tools"&gt;
+    &lt;!-- Base application theme. --&gt;
+    &lt;style name="Theme.TestApp" parent="Theme.MaterialComponents.DayNight.NoActionBar"&gt;
+       ...
+
+    &lt;/style&gt;
+&lt;/resources&gt;
+
+&lt;resources xmlns:Tools="http://schemas.android.com/tools"&gt;
+    &lt;!-- Base application theme. --&gt;
+    &lt;style name="Theme.testApp" parent="Theme.MaterialComponents.DayNight.NoActionBar"&gt;
+       ...
+    &lt;/style&gt;
+&lt;/resources&gt;
+</code></pre></div></div>
+<p>위처럼 제공하는 테마에서 추가를 하고 싶다면 <br />
+values.xml에서 <br /></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;resources&gt;
+    &lt;attr format="color" name="testColor"/&gt;
+&lt;/resources&gt;
+</code></pre></div></div>
+
+<p>좌측에 리소스 포맷을 적고 사용될 속성 명을 적는다.<br />
+즉 testColor라는 속성은 color을 가지는 리소스이다.<br /><br /></p>
+
+<p>이제 themes에서 해당 리소스를 추가한다. <br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- Customize your theme here. --&gt;
+&lt;item name="testColor"&gt;@color/#ff00ff&lt;/item&gt;
+</code></pre></div></div>
+
+<p>물론 화이트 / 다크 모드에서 적용할 것이기 때문에 두 곳 모두 색에 맞춰 추가한다.<br />
+이제 xml 안에 존재하는 widget에서 사용할 때는<br /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>android:textColor="?attr/testColor"
+</code></pre></div></div>
+
+<p>위와 같이 사용하면 된다.<br /><br /></p>
+
+<p>attr 은 뒤에 있는 속성 이름으로 값을 찾아오라는 의미이다.<br />
+내가 지금 다크 테마 상태라면 다크 테마에서 해당 속성 이름의 값 찾아오게 되고<br />
+라이트 테마 상태라면 라이트 테마에서 해당 속성 이름의 값을 찾아온다<br />
+<br /><br /></p>
+
+<h2 id="24-코드에서-강제로-모드-전환-"><strong>2.4 코드에서 강제로 모드 전환</strong> <br /></h2>
+
+<p>Android의 설정으로 사용자가 테마를 변경하는것이 아닌
+앱 자체에서 테마를 전환시킬수있다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) //다크모드 사용안함
+AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // 다크모드
+
+// Android 설정에 맞추기
+// 안드로이드 10 이상
+if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.Q) {
+	AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+}
+// 안드로이드 10 미만
+else {
+	AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+}
+</code></pre></div></div>
+
+<p><br />
+<br />
+<br />
+<br />
+<br /></p>
+:ET

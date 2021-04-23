@@ -1,0 +1,110 @@
+I"�<p><br />
+<br /></p>
+
+<h1 id="1-singleton-pattern">1 Singleton Pattern</h1>
+<hr />
+<h1 id="11-singleton-pattern싱글톤-패턴"><strong>1.1 Singleton Pattern(싱글톤 패턴)</strong></h1>
+<p><br />
+싱글톤 패턴이란 하나의 인스턴스를 재활용하여 사용하게 되는 패턴이다.<br />
+하나의 기능 Class를 사용하기 위해 new를 사용하여 새로운 인스턴스를 매번 생성한다면<br />
+그것은 프로그램에 있어 매우 부담스러운 일일 수 있다.<br /><br />
+이때 Class의 역할이 공유 변수 없이 단순하게 사용되는 역할을 수행한다면<br />
+매번 생성하지 않고 <strong>하나의 인스턴스를 공유</strong>하여 사용할 수 있다.<br /><br /></p>
+
+<h1 id="12-요구-사항"><strong>1.2 요구 사항</strong></h1>
+<p><br /></p>
+<p align="center">
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FDzESI%2FbtqPsDiv26C%2F7MWzMnuitruZFaprszIC51%2Fimg.png" />
+</p>
+<p>2개의 로직이 API라는 하나의 로직을 사용해 아 하는 요구 사항이다.<br /><br /></p>
+
+<h1 id="13-기존-코드"><strong>1.3 기존 코드</strong></h1>
+<p><br />
+이때 싱글 톤을 적용하지 않았다고 한다면<br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Class</span> <span class="n">기능1</span>
+<span class="o">{</span>
+    <span class="nc">Api</span> <span class="n">api</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Api</span><span class="o">();</span>
+    <span class="n">api</span><span class="o">.</span><span class="na">기능</span><span class="o">();</span>
+<span class="o">}</span>
+<span class="nc">Class</span> <span class="n">기능2</span>
+<span class="o">{</span>
+    <span class="nc">Api</span> <span class="n">api</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Api</span><span class="o">();</span>
+    <span class="n">api</span><span class="o">.</span><span class="na">기능</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>위와 같이 2개의 기능에서 API의 인스턴스를 매번 생성해 줘야만 한다.
+<br />
+<br /></p>
+
+<h1 id="2-실습">2. 실습</h1>
+<hr />
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Api</span>
+<span class="o">{</span>
+	<span class="kt">void</span> <span class="nf">Get</span><span class="o">()</span>
+	<span class="o">{</span>
+
+	<span class="o">}</span>
+	<span class="kt">void</span> <span class="nf">Post</span><span class="o">()</span>
+	<span class="o">{</span>
+
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br />
+위와 같이 API Class의 사용되는 메서드가 2개 있다고 예를 보자.<br />
+이때 2개의 로직에서 해당 Class를 사용할 때 매번 인스턴스를 생성하지 않게<br />
+Singleton Pattern 을 적용시켜보자.<br />
+<br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Api</span>
+<span class="o">{</span>
+	<span class="kd">static</span> <span class="kd">private</span> <span class="nc">Api</span> <span class="n">instance</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nf">Api</span><span class="o">()</span>
+	<span class="o">{</span>
+
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="nc">Api</span> <span class="nf">GetInstance</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="k">if</span><span class="o">(</span><span class="n">instance</span> <span class="o">==</span><span class="kc">null</span><span class="o">)</span>
+		<span class="o">{</span>
+			<span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Api</span><span class="o">();</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="kt">void</span> <span class="nf">Get</span><span class="o">()</span>
+	<span class="o">{</span>
+
+	<span class="o">}</span>
+	<span class="kt">void</span> <span class="nf">Post</span><span class="o">()</span>
+	<span class="o">{</span>
+
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<p>위와 같이 적용시킬 수 있다.<br /></p>
+
+<p>해당 Class의 인스턴스를 static로 생성시키고<br />
+해당 Class를 사용할 때에는 GetInstance() 메서드를 사용하여<br /></p>
+
+<p>인스턴스를 받아 사용하게 된다.<br /><br /></p>
+
+<p>이로 인해</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Api</span> <span class="n">api</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Api</span><span class="o">();</span>
+</code></pre></div></div>
+<p><br />
+위와 같이 새로운 인스턴스를 생성하지 못하게 되고<br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Api</span> <span class="n">api</span> <span class="o">=</span> <span class="nc">Api</span><span class="o">.</span><span class="na">GetInstance</span><span class="o">();</span>
+</code></pre></div></div>
+<p><br />
+위와 같이 인스턴스를 받아서 사용할 수밖에 없게 된다.<br /><br /></p>
+
+<h2 id="21-예제-코드"><strong>2.1 예제 코드</strong></h2>
+<p><br /></p>
+
+<p><a href="https://github.com/k4keye/DesignPattern">예제 코드 Git 주소 </a></p>
+:ET
