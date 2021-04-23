@@ -24,17 +24,17 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Your awesome title
+title: Jun's Devlog
 email: vps32@naver.com
 author: k4keye
-copyright: Copyright © 1970-2010
+copyright: Copyright © 2021
 description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 
-baseurl: "https://k4keye.github.io" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://k4keye.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 favicon: "" # the favicon for your site
 
 # Yat date format
@@ -61,28 +61,31 @@ lang: "ko"  # default lang is en
 # langs refer to https://cloud.google.com/translate/docs/languages
 # translate_langs:
 #   - lang: en
-#     img: https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png
 #     text: English
 #
 #   - lang: fr
-#     img: https://cdn.countryflags.com/thumbs/france/flag-400.png
+#     img: https://www.countryflags.io/fr/flat/64.png
 #     text: Franch
 #
 #   - lang: zh-CN
-#     img: https://cdn.countryflags.com/thumbs/china/flag-400.png
+#     img: https://www.countryflags.io/cn/flat/64.png
 #     text: Chinese(Simple)
 #
+#   - lang: zh-TW
+#     img: https://www.countryflags.io/tw/flat/64.png
+#     text: Chinese(Traditional)
+#
 #   - lang: ja
-#     img: https://cdn.countryflags.com/thumbs/japan/flag-400.png
-#     text: Japanese
+#     img: https://www.countryflags.io/jp/flat/64.png
+#     text: Japan
 #
 #   - lang: ko
-#     img: https://cdn.countryflags.com/thumbs/south-korea/flag-400.png
+#     img: https://www.countryflags.io/kr/flat/64.png
 #     text: Korean
 #
 #   - lang: ru
-#     img: https://cdn.countryflags.com/thumbs/russia/flag-400.png
-#     text: Russian
+#     img: https://www.countryflags.io/ru/flat/64.png
+#     text: Russia
 
 # You can choose a theme color
 # Default theme colors as below:
@@ -126,11 +129,11 @@ lang: "ko"  # default lang is en
 #   - about.md
 
 # Page default value
-# defaults:
-#   home:
-#     heading: "Your awesome heading"
-#     subheading: "Your awesome subheading"
-#     banner: "Your image url"
+defaults:
+  home:
+    heading: "프로그래밍은 자기 얼굴을 차는 것과 같아서, 조만간 코피가 날 것이다."
+    subheading: "카일 우드버리(Kyle Woodbury)"
+    banner: "Your image url"
 
 # Excerpt size setting
 # excerpt_size: 350
