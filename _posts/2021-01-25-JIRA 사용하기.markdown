@@ -1,9 +1,10 @@
 ---
 layout: post
 title: JIRA 처음 사용하기
+image: JIRA/jira.png
 author: k4keye
 date: 2021-01-25
-categories : essentialool
+categories : essentialtool
 ---
 <br/>
 <br/>

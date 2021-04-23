@@ -1,9 +1,10 @@
 ---
 layout: post
 title: Singleton Pattern
+image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FDzESI%2FbtqPsDiv26C%2F7MWzMnuitruZFaprszIC51%2Fimg.png
 author: k4keye
 date: 2020-12-30
-categories : design_pattern
+categories : designpattern
 ---
 <br/>
 <br/>
