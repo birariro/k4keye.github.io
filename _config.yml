@@ -24,15 +24,17 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: k4keye
+title: Your awesome title
 email: vps32@naver.com
 author: k4keye
 copyright: Copyright © 1970-2010
 description: >- # this means to ignore newlines until "baseurl:"
-  주니어 개발자의 좌충우돌 생존 일기
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
 
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://k4keye.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "https://k4keye.github.io" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
 favicon: "" # the favicon for your site
 
 # Yat date format
@@ -53,7 +55,7 @@ yat:
 # sitemap: false
 
 # If you want to change site language, you can set lang option
- lang: "ko"  # default lang is en
+lang: "ko"  # default lang is en
 
 # Translate languges
 # langs refer to https://cloud.google.com/translate/docs/languages
@@ -151,7 +153,6 @@ yat:
 # Build settings
 # highlighter: none
 markdown: kramdown
-
 kmarkdown:
   input: GFM
 
