@@ -23,6 +23,8 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
+remote_theme: "jeffreytse/jekyll-theme-yat"
+
 
 title: k4keye의 주니어 개발 일지
 email: vps32@naver.com
@@ -151,6 +153,7 @@ yat:
 # Build settings
 # highlighter: none
 markdown: kramdown
+
 kmarkdown:
   input: GFM
 
@@ -160,6 +163,3 @@ plugins:
   - jekyll-sitemap
   - jekyll-paginate
   - jekyll-spaceship
-  
-theme: jekyll-theme-yat
-remote_theme: "jeffreytse/jekyll-theme-yat"
