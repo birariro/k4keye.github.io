@@ -2,7 +2,7 @@
 layout: post
 title: TemplateMethod Pattern
 author: k4keye
-image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlXmu2%2FbtqPgGS2gjA%2FkakLwnxGDPvdTNqVl41Lk1%2Fimg.png
+image: pattern/TemplateMethod.png
 date: 2020-12-30
 categories : designpattern
 ---

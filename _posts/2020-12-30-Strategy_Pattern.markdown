@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Strategy Pattern
-image: https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FzfkeC%2FbtqPh98sLw0%2FO3q8N11w3EHREzmx0nJq80%2Fimg.png
+image: pattern/StrategyPattern.png
 author: k4keye
 date: 2020-12-30
 categories : designpattern
