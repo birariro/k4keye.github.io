@@ -24,8 +24,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-
-title: k4keye의 주니어 개발 일지
+title: k4keye
 email: vps32@naver.com
 author: k4keye
 copyright: Copyright © 1970-2010
