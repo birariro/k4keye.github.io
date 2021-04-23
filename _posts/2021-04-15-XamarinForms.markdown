@@ -3,7 +3,7 @@ layout: post
 title: XamarinForm
 author: k4keye
 date: 2021-04-15
-categories : Survival
+categories : survival
 ---
 <br/>
 <br/>

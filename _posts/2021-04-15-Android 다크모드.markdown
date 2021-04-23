@@ -3,7 +3,7 @@ layout: post
 title: Android 다크모드 적용하기
 author: k4keye
 date: 2021-04-15
-categories : Android
+categories : android
 ---
 <br/>
 <br/>

@@ -3,7 +3,7 @@ layout: post
 title: 도커 시작 하기
 author: k4keye
 date: 2020-12-30
-categories : Docker
+categories : docker
 ---
 <br/>
 <br/>

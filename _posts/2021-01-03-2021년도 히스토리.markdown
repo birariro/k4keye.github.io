@@ -3,7 +3,7 @@ layout: post
 title: 2021 년도 공부 일지
 author: k4keye
 date: 2021-01-03
-categories : Personal
+categories : personal
 ---
 <br/>
 <br/>

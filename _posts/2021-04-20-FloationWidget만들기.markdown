@@ -3,7 +3,7 @@ layout: post
 title: Android FloationWidget 구현하기
 author: k4keye
 date: 2021-04-20
-categories : Android
+categories : android
 ---
 <br/>
 <br/>
