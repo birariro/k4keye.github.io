@@ -24,7 +24,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Jun's Devlog
+title: Ju's Devlog
 email: vps32@naver.com
 author: k4keye
 copyright: Copyright © 2021
