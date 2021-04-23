@@ -1,0 +1,8 @@
+---
+layout: home
+title: essentialtool
+permalink: /category/essentialtool/
+---
+{% include header.html %}
+{% include category-list.html %}
+{% include categories.html %}

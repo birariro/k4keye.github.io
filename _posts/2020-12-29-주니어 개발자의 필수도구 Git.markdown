@@ -1,10 +1,10 @@
 ---
 layout: post
 title: 주니어 개발자의 필수도구 Git
-image: /git/git.png
+image: git/git.png
 author: k4keye
 date: 2020-12-30
-categories : EssentialTool
+categories : essentialtool
 ---
 <br/>
 <br/>
