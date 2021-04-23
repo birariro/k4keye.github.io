@@ -1,7 +1,7 @@
 ---
 layout: post
 title: AWS 서버 아키텍처 구축하기 - 1
-image: aws1/awsdesign.png
+image: AWS1/awsdesign.png
 author: k4keye
 date: 2020-12-30
 categories : aws
