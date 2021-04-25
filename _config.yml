@@ -24,14 +24,12 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Ju's Devlog
+title: k4keye의 주니어 개발 일지
 email: vps32@naver.com
 author: k4keye
 copyright: Copyright © 2021
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  주니어 개발자의 좌충우돌 생존 일기
 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://k4keye.github.io" # the base hostname & protocol for your site, e.g. http://example.com
@@ -131,8 +129,8 @@ lang: "ko"  # default lang is en
 # Page default value
 defaults:
   home:
-    heading: "프로그래밍은 자기 얼굴을 차는 것과 같아서, 조만간 코피가 날 것이다."
-    subheading: "카일 우드버리(Kyle Woodbury)"
+    heading: "새로운 기술 흐름에 압도되지않고, 스스로의 방향성과 페이스로 앞으로 나아갈 수 있는 탄탄한 기본기."
+    subheading: "2021 네이버 채용공고 문구중."
     banner: "Your image url"
 
 # Excerpt size setting

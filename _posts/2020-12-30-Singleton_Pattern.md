@@ -3,10 +3,8 @@ layout: post
 title: Singleton Pattern
 author: k4keye
 date: 2020-12-30
-categories : Design Pattern
+categories : DesignPattern
 ---
-<br/>
-<br/>
 
 ## 1 Singleton Pattern
 ___

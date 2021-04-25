@@ -5,9 +5,6 @@ author: k4keye
 date: 2021-04-20
 categories : Android
 ---
-<br/>
-<br/>
-
 ## 요구사항
 ___
 앱 밖에 표시되는 즉 안드로이드 디바이스 화면 에 표시되는 view를 만들고싶다.

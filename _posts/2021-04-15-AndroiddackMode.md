@@ -5,9 +5,6 @@ author: k4keye
 date: 2021-04-15
 categories : Android
 ---
-<br/>
-<br/>
-
 ## 1 서론
 ___
 Android 10부터 Dark theme를 지원하기 시작하여<br/>

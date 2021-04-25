@@ -3,7 +3,7 @@ layout: post
 title: TemplateMethod Pattern
 author: k4keye
 date: 2020-12-30
-categories : Design Pattern
+categories : DesignPattern
 ---
 ## **1 TemplateMethod Pattern**
 

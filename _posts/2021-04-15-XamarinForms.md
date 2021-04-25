@@ -5,8 +5,6 @@ author: k4keye
 date: 2021-04-15
 categories : Survival
 ---
-<br/>
-<br/>
 
 여기에 작성되는 내용은 XamarinForm 을 통해 Android를 개발하면서 <br/>
 나중에 필요할 때 다시 찾기도 하고 <br/>
