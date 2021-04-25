@@ -3,29 +3,29 @@ layout: post
 title: Android FloationWidget 구현하기
 author: k4keye
 date: 2021-04-20
-categories : android
+categories : Android
 ---
 <br/>
 <br/>
 
-# 요구사항
+## 요구사항
 ___
 앱 밖에 표시되는 즉 안드로이드 디바이스 화면 에 표시되는 view를 만들고싶다.
  <br/>
 
-# 구현 방법
+## 구현 방법
 ___
 1. 화면위에 그리기 원한을 사용한다.
 2. 서비스에서 view를 호출한다.
 
  <br/>
 
-# 구현
+## 구현
 ___
 
 <br/>
 
-## 1. 권한
+### 1. 권한
 
 ```kotlin
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -35,7 +35,7 @@ ___
 안드로이드 오레오 이상에서 서비스를 호출하기위한 포그라운드 서비스 등록
  <br/> <br/>
  
-## 2. 권한획득 및 서비스 호출
+### 2. 권한획득 및 서비스 호출
 ```kotlin
 class MainActivity : AppCompatActivity() {
     private val serviceIntent by lazy {  Intent(this, ImmortalService::class.java)  }
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
 ```
 MainActivity에서는 화면위에 그리기 권한과 서비스 호출을 하고있다.
  <br/> <br/>
-## 3. 서비스 구현
+### 3. 서비스 구현
 ```kotlin
 class ImmortalService : Service() {
 
@@ -165,7 +165,7 @@ class ImmortalService : Service() {
 xml 파일을 WindowManager에게 적용시켜 <br/>
 앱 밖에 표시되도록 한다. <br/>
  <br/>
-## 4. 앱 밖에 표시될 화면
+### 4. 앱 밖에 표시될 화면
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
@@ -185,7 +185,7 @@ xml 파일을 WindowManager에게 적용시켜 <br/>
 </LinearLayout>
 ```
  <br/> <br/>
-# 결과
+## 결과
 ___
 ![image](https://user-images.githubusercontent.com/52993842/115334969-47d34200-a1d7-11eb-9dff-8f6d0804a906.png)
 ![image](https://user-images.githubusercontent.com/52993842/115334983-4dc92300-a1d7-11eb-8608-c20a9b6cc2c6.png)
