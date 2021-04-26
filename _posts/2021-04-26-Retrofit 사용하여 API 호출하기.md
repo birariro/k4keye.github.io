@@ -5,7 +5,7 @@ author: k4keye
 date: 2021-04-26
 categories : Android
 ---
-## 1 서론
+## 1 Retrofit
 ___
 Retrofit는 REST 기반 웹 서비스를 통해 JSON 혹은 그 외의 데이터를 요청하고 <br/>
 응답받는 것을 쉽게 하는 라이브러리이다.<br/>
@@ -83,7 +83,7 @@ object RetrofitClient {
     }
 }
 ```
-Retrofit를 생성하여 사용할 수 있는 Class 파일을 만들어줘야 한다.<bt/
+Retrofit를 생성하여 사용할 수 있는 Class 파일을 만들어줘야 한다.<bt/>
 >
 ### **2.4 응답 받을 데이터 포멧 준비**<br/>
 
