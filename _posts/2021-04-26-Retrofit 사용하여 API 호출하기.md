@@ -21,7 +21,7 @@ post{
 	pwd="pwd"
 }
 ```
-위와같은 API를 호출하여
+위와같은 API를 호출한다.
 
 API 성공 응답
 ```json
