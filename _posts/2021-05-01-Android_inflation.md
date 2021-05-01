@@ -35,10 +35,10 @@ Inflation에는 두 가지 방식이 있다.
 이것이 Inflation 이다.<br/>
 setContentView 는 전체 화면에 뷰를 지정할 때 사용된다.<br/>
 
-#### **1.3.1 일부화면**
+#### **1.3.2 일부화면**
 
 LayoutInflater 를 사용하여 작업하는 경우 전체 화면이 아닌 일부를 차지하는 요소들을 화면에 보여줄 때 사용된다.<br/>
-물론 이 또한 nflation 이다.<br/>
+물론 이 또한 Inflation 이다.<br/>
 
 ### **1.4 결론**
 결국 View를 그리기 위해 작성한 xml은 Inflation을 통해 제어를 할 수 있던 것이었다.<br/>
