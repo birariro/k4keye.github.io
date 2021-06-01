@@ -8,7 +8,7 @@ categories : Android
 
 ## 1 서론
 ___
-## **1.1 FindViewByid**
+### **1.1 FindViewByid**
 <br/>
 안드로이드에서 Layout에 존재하는 컴포넌트를 객체로 사용하려면<br/>
 FindViewByid를 통하여 작업을 했어야 했다.<br/>
@@ -22,7 +22,7 @@ class 파일에는 FindViewByid 가 많이 붙게 되는 걸 볼 수 있다.<br/
 따라서 이제는 ViewBinding를 사용하도록 권장하고 있다.<br/><br/>
 
 
-## **1.2 ViewBinding**
+### **1.2 ViewBinding**
 <br/>
 build.gradle에 viewBinding 속성을 활성화시키는 것으로 사용할 수 있으며<br/>
 해당 모듈에 있는 layout 파일에 대한 binding class 가 자동으로 생성된다.<br/>
@@ -32,7 +32,7 @@ build.gradle에 viewBinding 속성을 활성화시키는 것으로 사용할 수
 
 ## 2 ViewBinding 사용하기
 ___
-## **2.1 ViewBinding 활성화**
+### **2.1 ViewBinding 활성화**
 <br/>
 
 ```gradle
@@ -48,7 +48,7 @@ android {
 activity_main.xml -> ActivityMainBinding로 생성된다.<br/><br/>
 
 
-## **2.2 Layout에 컴포넌트 배치**
+### **2.2 Layout에 컴포넌트 배치**
 <br/>
 
 ```xml
@@ -78,7 +78,7 @@ activity_main.xml -> ActivityMainBinding로 생성된다.<br/><br/>
 간단하게 TextView, Button 을 하나씩 배치하였다.<br/><br/>
 
 
-## **2.3 Activity Class 파일 수정**
+### **2.3 Activity Class 파일 수정**
 <br/>
 
 ```kotlin
@@ -112,7 +112,7 @@ Binding Class의 인스턴스를 얻기 위해 inflate()를 사용하여 <br/>
 rootView를 매개변수로 넣어주는 것으로 View를 참조할 수 있게 된다.<br/>
 
 
-## **2.4 컴포넌트 접근**
+### **2.4 컴포넌트 접근**
 <br/>
 
 ```kotlin
