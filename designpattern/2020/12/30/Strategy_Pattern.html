@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Strategy Pattern | k4keye의 주니어 개발 일지</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="Strategy Pattern">
+<meta name="author" content="k4keye">
+<meta property="og:locale" content="ko">
+<meta name="description" content="1 Strategy Pattern">
+<meta property="og:description" content="1 Strategy Pattern">
+<link rel="canonical" href="https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/Strategy_Pattern.html">
+<meta property="og:url" content="https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/Strategy_Pattern.html">
+<meta property="og:site_name" content="k4keye의 주니어 개발 일지">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-12-30T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Strategy Pattern">
+<script type="application/ld+json">
+{"dateModified":"2020-12-30T00:00:00+00:00","datePublished":"2020-12-30T00:00:00+00:00","description":"1 Strategy Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/Strategy_Pattern.html"},"url":"https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/Strategy_Pattern.html","@type":"BlogPosting","author":{"@type":"Person","name":"k4keye"},"headline":"Strategy Pattern","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/jekyll-theme-yat/assets/css/main.css">
+  <script src="/jekyll-theme-yat/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://k4keye.github.io/jekyll-theme-yat/feed.xml" title="k4keye의 주니어 개발 일지">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/jekyll-theme-yat/">
+  <img class="site-favicon" title="k4keye의 주니어 개발 일지" src="/images/favicon.png" onerror="this.style.display='none'">
+  k4keye의 주니어 개발 일지
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/jekyll-theme-yat/about.html">ABOUT</a><a class="page-link" href="/jekyll-theme-yat/archives.html">ARCHIVES</a><a class="page-link" href="/jekyll-theme-yat/categories.html">CATEGORIES</a><a class="page-link" href="/jekyll-theme-yat/">HOME</a><a class="page-link" href="/jekyll-theme-yat/tags.html">TAGS</a>
+
+
+
+
+<span class="page-link">
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="Franch">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Japan">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russia">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: '',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  (function() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">Strategy Pattern</h1>
+  <h3 class="post-subtitle"></h3>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2020-12-30T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> Dec 30, 2020
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 6 mins</span>
+  </p></header>
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="1-strategy-pattern">1 Strategy Pattern</h2>
+<hr>
+
+<h3 id="11-strategy-pattern전략-패턴"><strong>1.1 Strategy Pattern(전략 패턴)</strong></h3>
+<p><br>
+객체들이 할 수 있는 행위들을 클래스로 작성하고 행위를 자유롭게 바꿀 수 있게 하는 패턴으로 <br></p>
+
+<p>같은 역할을 하는 여러 알고리즘을 여러 클래스로 작성하고 이를 필요할 때 교체하여 <br>
+사용할 수 있게 하는 디자인 패턴이다.<br><br></p>
+
+<p><strong>즉 전체적으로는 같은 동작을 하는 여러 일을 전략적으로 나누어서 쉽게 교체할 수 있게 하는 패턴이다.</strong><br><br></p>
+
+<h3 id="12-요구-사항"><strong>1.2 요구 사항</strong></h3>
+<p><br></p>
+
+<p align="center">
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FzfkeC%2FbtqPh98sLw0%2FO3q8N11w3EHREzmx0nJq80%2Fimg.png">
+</p>
+
+<p>위와 같이 각각의 로직들이 필요로 하는 기능들이<br></p>
+
+<p>각각의 역할을 수행할 수 있는 알고리즘을 사용해야 할 때<br></p>
+
+<p>이 알고리즘을 인터페이스로 정의하여 동적으로 바꿔서 사용하게 할 수 있다.<br><br></p>
+
+<p align="center">
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlQxkx%2FbtqPfTZlbM1%2FPFzO7hS3feFfB16xQQH7R0%2Fimg.png">
+</p>
+
+<h2 id="2-실습">2. 실습</h2>
+<hr>
+
+<h3 id="21-코드-구현"><strong>2.1 코드 구현</strong></h3>
+<p><br>
+먼저 필요한 것은 모든 로직이 사용할 API를 구현하기 전에<br></p>
+
+<p>API에서 전략적으로 바뀔 클래스를 정의할 인터페이스가 먼저 필요하다.<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">IAPI</span>
+<span class="o">{</span>
+	<span class="kt">void</span> <span class="nf">Get</span><span class="o">();</span>
+	<span class="kt">void</span> <span class="nf">Post</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br></p>
+
+<p>모든 인터페이스는 Get 과 Post를 사용해야 한다고 보고 위와 같이 구성하였다.<br></p>
+
+<p>그리고 각각의 UserAPI , CheckAPI , SyncAPI에서 위의 인터페이스를 구현한다.<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">UserAPI</span> <span class="o">:</span> <span class="no">IAPI</span>
+<span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Get</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"User API GET 호출"</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Post</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"User API POST 호출"</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">CheckAPI</span> <span class="o">:</span> <span class="no">IAPI</span>
+<span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Get</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"Check API GET 호출"</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Post</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"Check API POST 호출"</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SyncAPI</span> <span class="o">:</span> <span class="no">IAPI</span>
+<span class="o">{</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Get</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"Sync API GET 호출"</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Post</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"Sync API POST 호출"</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br>
+지금은 간단하게 호출된 로직을 화면에 출력하는 게 끝이다.<br></p>
+
+<p>이제 모든 로직들이 요청할 API Class를 구현할 것이다.<br></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">API</span>
+<span class="o">{</span>
+	<span class="kd">private</span> <span class="nc">IRequest</span> <span class="n">request</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAPI</span><span class="o">(</span><span class="nc">IRequest</span> <span class="n">request</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">request</span> <span class="o">=</span> <span class="n">request</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Get</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="n">request</span><span class="o">.</span><span class="na">Get</span><span class="o">();</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">Post</span><span class="o">()</span>
+	<span class="o">{</span>
+		<span class="n">request</span><span class="o">.</span><span class="na">Post</span><span class="o">();</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br>
+이곳에서 중요한 부분이 바로 <br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="nc">IRequest</span> <span class="n">request</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAPI</span><span class="o">(</span><span class="nc">IRequest</span> <span class="n">request</span><span class="o">)</span>
+<span class="o">{</span>
+	<span class="k">this</span><span class="o">.</span><span class="na">request</span> <span class="o">=</span> <span class="n">request</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br>
+이 부분인데 해당 API 클래스를 사용할 때는 인터페이스를 구현한 클래스 중 <br>
+어느 클래스로 사용할지를 받게 한다.<br><br></p>
+
+<p>이렇게 만들어진 전략 패턴을 사용해보자.<br></p>
+
+<p>API를 필요로 하는 모든 곳은 API class를 통해 사용해야 한다.<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">API</span> <span class="n">api</span> <span class="o">=</span> <span class="k">new</span> <span class="no">API</span><span class="o">();</span>
+</code></pre></div></div>
+<p><br>
+그 후 API 중 어느 API로 갈지를 인스턴스로 넣어줘야 한다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">API</span> <span class="n">api</span> <span class="o">=</span> <span class="k">new</span> <span class="no">API</span><span class="o">();</span>
+
+<span class="n">api</span><span class="o">.</span><span class="na">setAPI</span><span class="o">(</span><span class="k">new</span> <span class="nc">SyncAPI</span><span class="o">());</span>
+<span class="n">api</span><span class="o">.</span><span class="na">Get</span><span class="o">();</span>
+<span class="n">api</span><span class="o">.</span><span class="na">setAPI</span><span class="o">(</span><span class="k">new</span> <span class="nc">UserAPI</span><span class="o">());</span>
+<span class="n">api</span><span class="o">.</span><span class="na">Post</span><span class="o">();</span>
+<span class="n">api</span><span class="o">.</span><span class="na">setAPI</span><span class="o">(</span><span class="k">new</span> <span class="nc">SyncAPI</span><span class="o">());</span>
+<span class="n">api</span><span class="o">.</span><span class="na">Get</span><span class="o">();</span>
+</code></pre></div></div>
+<p><br></p>
+<p align="center">
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FvWNry%2FbtqPnbYYSQW%2FSn7Nogk3mhDUrN0hQJKmK1%2Fimg.png">
+</p>
+
+<p>이제 새로운 API가 나오더라도 API를 호출하는 방법은 똑같지만<br></p>
+
+<p>setAPI()에서 새로운 API를 추가해서 사용할 수 있게 된다.<br>
+<br></p>
+
+<h3 id="22-예제-코드"><strong>2.2 예제 코드</strong></h3>
+<p><br></p>
+
+<p><a href="https://github.com/k4keye/DesignPattern">예제 코드 Git 주소 </a></p>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/jekyll-theme-yat/designpattern/2020/12/30/Singleton_Pattern.html" title="Singleton Pattern">Singleton Pattern</a><a class="next" href="/jekyll-theme-yat/designpattern/2020/12/30/TemplateMethod_Pattern.html" title="TemplateMethod Pattern">TemplateMethod Pattern</a>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        <li><a class="post-link" href="/jekyll-theme-yat/essentialtool/2020/12/30/%EC%A3%BC%EB%8B%88%EC%96%B4-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%95%84%EC%88%98%EB%8F%84%EA%B5%AC-Git.html" title="TemplateMethod Pattern">주니어 개발자의 필수도구 Git</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/blcokchain/2021/06/11/%EB%B9%84%EC%9E%94%ED%8B%B4-%EC%9E%A5%EA%B5%B0%EC%9D%98-%EB%94%9C%EB%A0%88%EB%A7%88.html" title="TemplateMethod Pattern">비잔틴 장군의 딜레마와 블록체인</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/docker/2020/12/30/%EB%8F%84%EC%BB%A4-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" title="TemplateMethod Pattern">도커 시작 하기</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/essentialtool/2021/01/25/JIRA-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0.html" title="TemplateMethod Pattern">JIRA 처음 사용하기</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        item = items[i]
+        // if (!item.classList.contains('h-h2')) {
+          item.style.display = '';
+        // }
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function (event) {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerHeight = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerHeight) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+      event.preventDefault();
+    });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/jekyll-theme-yat/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+      <div>Copyright © 2021 @k4keye</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/jekyll-theme-yat/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>AWS 서버 아키텍처 구축하기 - 1 | k4keye의 주니어 개발 일지</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="AWS 서버 아키텍처 구축하기 - 1">
+<meta name="author" content="k4keye">
+<meta property="og:locale" content="ko">
+<meta name="description" content="1. 서론 REST API 서버가 필요한 상황이 와서 AWS를 통해 서버를 구축하게 되었는데 결과적을 구축된 아키텍처 와 왜 이렇게 사용했는지에 대해 기록하려 한다. 만약 나처럼 AWS는 처음 다뤄보는 사람에게는 도움이 되길.">
+<meta property="og:description" content="1. 서론 REST API 서버가 필요한 상황이 와서 AWS를 통해 서버를 구축하게 되었는데 결과적을 구축된 아키텍처 와 왜 이렇게 사용했는지에 대해 기록하려 한다. 만약 나처럼 AWS는 처음 다뤄보는 사람에게는 도움이 되길.">
+<link rel="canonical" href="https://k4keye.github.io/jekyll-theme-yat/aws/2020/12/30/AWS1.html">
+<meta property="og:url" content="https://k4keye.github.io/jekyll-theme-yat/aws/2020/12/30/AWS1.html">
+<meta property="og:site_name" content="k4keye의 주니어 개발 일지">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-12-30T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="AWS 서버 아키텍처 구축하기 - 1">
+<script type="application/ld+json">
+{"dateModified":"2020-12-30T00:00:00+00:00","datePublished":"2020-12-30T00:00:00+00:00","description":"1. 서론 REST API 서버가 필요한 상황이 와서 AWS를 통해 서버를 구축하게 되었는데 결과적을 구축된 아키텍처 와 왜 이렇게 사용했는지에 대해 기록하려 한다. 만약 나처럼 AWS는 처음 다뤄보는 사람에게는 도움이 되길.","mainEntityOfPage":{"@type":"WebPage","@id":"https://k4keye.github.io/jekyll-theme-yat/aws/2020/12/30/AWS1.html"},"url":"https://k4keye.github.io/jekyll-theme-yat/aws/2020/12/30/AWS1.html","@type":"BlogPosting","author":{"@type":"Person","name":"k4keye"},"headline":"AWS 서버 아키텍처 구축하기 - 1","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/jekyll-theme-yat/assets/css/main.css">
+  <script src="/jekyll-theme-yat/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://k4keye.github.io/jekyll-theme-yat/feed.xml" title="k4keye의 주니어 개발 일지">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/jekyll-theme-yat/">
+  <img class="site-favicon" title="k4keye의 주니어 개발 일지" src="/images/favicon.png" onerror="this.style.display='none'">
+  k4keye의 주니어 개발 일지
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/jekyll-theme-yat/about.html">ABOUT</a><a class="page-link" href="/jekyll-theme-yat/archives.html">ARCHIVES</a><a class="page-link" href="/jekyll-theme-yat/categories.html">CATEGORIES</a><a class="page-link" href="/jekyll-theme-yat/">HOME</a><a class="page-link" href="/jekyll-theme-yat/tags.html">TAGS</a>
+
+
+
+
+<span class="page-link">
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="Franch">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Japan">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russia">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: '',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  (function() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">AWS 서버 아키텍처 구축하기 - 1</h1>
+  <h3 class="post-subtitle"></h3>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2020-12-30T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> Dec 30, 2020
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 6 mins</span>
+  </p></header>
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="1-서론">1. 서론</h2>
+<hr>
+<p>REST API 서버가 필요한 상황이 와서<br>
+AWS를 통해 서버를 구축하게 되었는데 결과적을 구축된 아키텍처 와<br>
+왜 이렇게 사용했는지에 대해 기록하려 한다.<br>
+만약 나처럼 AWS는 처음 다뤄보는 사람에게는 도움이 되길.<br></p>
+
+<h3 id="11-요구-사항">
+<strong>1.1 요구 사항</strong><br>
+</h3>
+<ol>
+  <li>
+    <p>부하 테스트를 통해 적절한 스펙의 서버(5분마다 약 1만 건의 API 요청)</p>
+  </li>
+  <li>
+    <p>부하 테스트를 통해 적절한 적절한 RDS 구비</p>
+  </li>
+  <li>
+    <p>서버와 RDS의 이중화</p>
+  </li>
+  <li>
+    <p>서버가 다운되더라도 다시 올라올 수 있게 가용성 유지</p>
+  </li>
+  <li>
+    <p>HTTPS 통신</p>
+  </li>
+  <li>
+    <p>도매인 구입</p>
+  </li>
+</ol>
+
+<h2 id="2-요구-사항-작업">2. 요구 사항 작업</h2>
+<hr>
+<h3 id="21-aws-ec2">
+<strong>2.1 AWS EC2</strong><br>
+</h3>
+<p align="center">
+    <img src="https://github.com/k4keye/k4keye.github.io/blob/master/images/AWS1/ec2.png?raw=true">
+</p>
+
+<p>AWS는 다양한 플랫폼을 제공하지만 그중 대표적인 EC2를 이용하여 서버를 구축했다. <br></p>
+
+<p>여기서 문제는 EC2 가 너무 다양하게 제공하는 것인데 운영체제부터 스펙까지 너무 다양했고 <br></p>
+
+<p>운영체제는 확장성을 위해 Amazon Linux 2로 선택하였다. <br></p>
+
+<p>스펙은 t3a large를 선택하였는데 <br></p>
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/103391766-6648fb00-4b5e-11eb-94ce-3a2bb80cc8ca.png">
+</p>
+<p>더 낮은 스펙으로 구성훈 부하 테스트를 해보니 4CPU 16G 정도의 스펙이 필요하다는 걸 알게 되었고<br></p>
+
+<p>이중화로 2개의 EC2를 구비할 것이니 절반인 <strong>2CPU 8G로 2개를 선택</strong>하였다.<br><br></p>
+
+<h3 id="22-rds">
+<strong>2.2 RDS</strong><br>
+</h3>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/103391777-6c3edc00-4b5e-11eb-822e-08da3f2db33f.png">
+</p>
+<p>RDS는 마리아 DB를 선택하였고 4CPU, 16G를 준비하였다.<br></p>
+
+<p>RDS 또한 부하 테스트를 통해 적절한 스펙을 찾은 것이고<br></p>
+
+<p>EC2와 같이 이중화를 할 것인데 RDS는 스펙을 절반으로 줄이지 않았다.<br></p>
+
+<p>이유는 이중화에서.<br><br></p>
+
+<h3 id="23-이중화">
+<strong>2.3 이중화</strong><br>
+</h3>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/103391795-7365ea00-4b5e-11eb-95b4-76d2d0a3b41a.png">
+</p>
+<p>이중화를 하기 위해 사용된 것이 AWS의 로드밸런서(ELB)인데<br></p>
+
+<p>로드밸런서를 통해 트래픽을 분산 시 키 2대의 EC2를 적절히 사용할 수 있다.<br></p>
+
+<p>RDS의 이중화는 RDS 생성 시 혹은 수정해서 다중 AZ 배포를 활성화할 수 있는데<br>
+기존에 사용하던 Master RDS가 다운되었을 때 Slave RDS가 Master로 승격되어 <br>
+사용자가 따로 건드릴 필요 없이 가용성을 유지시켜준다.<br><br></p>
+
+<h3 id="24-서버의-가용성">
+<strong>2.4 서버의 가용성</strong><br>
+</h3>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/103391803-7c56bb80-4b5e-11eb-9166-dd4c996b7739.png">
+</p>
+
+<p>서버의 가용성을 유지하기 위해 오토스케일링 을 사용하였다.<br></p>
+
+<p>오토스케일링 이를 사용하여 서버의 CPU 혹은 메모리의 정해둔 임계치까지 도달하면<br>
+서버를 늘리거나 혹은 서버가 다운되면 다른 서버를 생성하는 등 여려 방식이 있지만<br>
+나는 하나의 서버가 다운되면 다시 서버를 올려 서버의 개수를 유지하도록 하였다.<br></p>
+
+<h3 id="25-https">
+<strong>2.5 HTTPS</strong><br>
+</h3>
+<p>HTTPS에서 필요한 인증서는 로드밸런서를 사용하게 되면 공짜로 받을 수 있다.<br>
+따라서 이중화를 하면 자동으로 해결.<br><br></p>
+
+<h3 id="26-도매인">
+<strong>2.6 도매인</strong><br>
+</h3>
+<p align="center">
+    <img src="https://github.com/k4keye/k4keye.github.io/blob/master/images/AWS1/gabia.png?raw=true">
+</p>
+<p>도매인은 AWS에서 구입이 가능하지만
+가비아에서 따로 구입해서 사용하였다.<br><br></p>
+
+<h2 id="3-구성도">3. 구성도</h2>
+<hr>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/103391822-95f80300-4b5e-11eb-983f-aab450fe3887.png">
+</p>
+<p><br></p>
+
+<h2 id="4-동작-방식-시나리오">4. 동작 방식 시나리오</h2>
+<h2 id="41-이상이-없을때">
+<strong>4.1 이상이 없을때</strong><br>
+</h2>
+<p>사용자는 구입해놓은 도매인을 통해 API를 요청한다.<br>
+해당 도매인은 Route 53에 의해 연결된 로드벨런서로 요청이 전달된다.<br>
+로드벨런서는 요청에 대해 적절히 분산시켜 2개의 EC2에게 전달하여 처리하게 한다.<br><br></p>
+
+<h3 id="42-ec2-다운">
+<strong>4.2 EC2 다운</strong><br>
+</h3>
+<p>만약 Public1 존 에 있는 EC2가 다운된 경우 로드벨런서에 의해 각 EC2는 체크를 하고 있다가<br>
+트래픽을 Public2 존 에 있는 EC2에게 모두 전달하게 하여 서비스가 중단되지 않게 한다.<br></p>
+
+<p>그 후 오토스케일링에 의해 Public1에 EC2가 생성되고 이를 확인한 로드벨런서는 다시 트래픽을 분산시킨다.<br><br></p>
+
+<h3 id="43-rds-다운">
+<strong>4.3 RDS 다운</strong><br>
+</h3>
+<p>다중 AZ 배포를 한 RDS 중 Master RDS가 다운되었을 때<br>
+대기하고 있던  Slave RDS가 Master로 승격되어 EC2의 처리 요청에 응답해 준다.</p>
+
+<p>​</p>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/103391830-9c867a80-4b5e-11eb-82f0-42fd98b2179a.jpg">
+</p>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/jekyll-theme-yat/essentialtool/2020/12/30/%EC%A3%BC%EB%8B%88%EC%96%B4-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%95%84%EC%88%98%EB%8F%84%EA%B5%AC-Git.html" title="주니어 개발자의 필수도구 Git">주니어 개발자의 필수도구 Git</a><a class="next" href="/jekyll-theme-yat/designpattern/2020/12/30/Singleton_Pattern.html" title="Singleton Pattern">Singleton Pattern</a>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        <li><a class="post-link" href="/jekyll-theme-yat/blcokchain/2021/06/23/UTXO%EC%97%90%EB%8C%80%ED%95%B4%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90.html" title="Singleton Pattern">UTXO에 대해 알아보자.</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/android/2021/04/27/Android-Intent%EC%97%90%EC%84%9C%EC%9D%98-Bundle.html" title="Singleton Pattern">Android Intent에서의 Bundle</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/android/2021/04/25/Retrofit-%EC%9D%B8%ED%84%B0%EC%85%89%ED%84%B0-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0.html" title="Singleton Pattern">Retrofit 인터셉터 사용하기</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/android/2021/04/26/Retrofit-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-API-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0.html" title="Singleton Pattern">Retrofit 사용하여 API 호출하기</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        item = items[i]
+        // if (!item.classList.contains('h-h2')) {
+          item.style.display = '';
+        // }
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function (event) {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerHeight = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerHeight) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+      event.preventDefault();
+    });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/jekyll-theme-yat/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+      <div>Copyright © 2021 @k4keye</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/jekyll-theme-yat/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

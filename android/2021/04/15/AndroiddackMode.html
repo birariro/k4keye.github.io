@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Android 다크모드 적용하기 | k4keye의 주니어 개발 일지</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="Android 다크모드 적용하기">
+<meta name="author" content="k4keye">
+<meta property="og:locale" content="ko">
+<meta name="description" content="1 서론 Android 10부터 Dark theme를 지원하기 시작하여 이제 앱은 기본적으로 밝은 화면, 어두운 화면을 둘 다 제공해야 한다.">
+<meta property="og:description" content="1 서론 Android 10부터 Dark theme를 지원하기 시작하여 이제 앱은 기본적으로 밝은 화면, 어두운 화면을 둘 다 제공해야 한다.">
+<link rel="canonical" href="https://k4keye.github.io/jekyll-theme-yat/android/2021/04/15/AndroiddackMode.html">
+<meta property="og:url" content="https://k4keye.github.io/jekyll-theme-yat/android/2021/04/15/AndroiddackMode.html">
+<meta property="og:site_name" content="k4keye의 주니어 개발 일지">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2021-04-15T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Android 다크모드 적용하기">
+<script type="application/ld+json">
+{"dateModified":"2021-04-15T00:00:00+00:00","datePublished":"2021-04-15T00:00:00+00:00","description":"1 서론 Android 10부터 Dark theme를 지원하기 시작하여 이제 앱은 기본적으로 밝은 화면, 어두운 화면을 둘 다 제공해야 한다.","mainEntityOfPage":{"@type":"WebPage","@id":"https://k4keye.github.io/jekyll-theme-yat/android/2021/04/15/AndroiddackMode.html"},"url":"https://k4keye.github.io/jekyll-theme-yat/android/2021/04/15/AndroiddackMode.html","@type":"BlogPosting","author":{"@type":"Person","name":"k4keye"},"headline":"Android 다크모드 적용하기","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/jekyll-theme-yat/assets/css/main.css">
+  <script src="/jekyll-theme-yat/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://k4keye.github.io/jekyll-theme-yat/feed.xml" title="k4keye의 주니어 개발 일지">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/jekyll-theme-yat/">
+  <img class="site-favicon" title="k4keye의 주니어 개발 일지" src="/images/favicon.png" onerror="this.style.display='none'">
+  k4keye의 주니어 개발 일지
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/jekyll-theme-yat/about.html">ABOUT</a><a class="page-link" href="/jekyll-theme-yat/archives.html">ARCHIVES</a><a class="page-link" href="/jekyll-theme-yat/categories.html">CATEGORIES</a><a class="page-link" href="/jekyll-theme-yat/">HOME</a><a class="page-link" href="/jekyll-theme-yat/tags.html">TAGS</a>
+
+
+
+
+<span class="page-link">
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="Franch">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Japan">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russia">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: '',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  (function() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">Android 다크모드 적용하기</h1>
+  <h3 class="post-subtitle"></h3>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2021-04-15T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> Apr 15, 2021
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 10 mins</span>
+  </p></header>
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="1-서론">1 서론</h2>
+<hr>
+<p>Android 10부터 Dark theme를 지원하기 시작하여<br>
+이제 앱은 기본적으로 밝은 화면, 어두운 화면을 둘 다 제공해야 한다.<br><br></p>
+
+<p>해당 글에서는 기본적으로 제공하는 테마에서 원하는 <br>
+color이나 style 등을 적용시키는 방법을 알아볼 것이다.
+<br><br></p>
+
+<h2 id="2-android-theme">2 Android Theme</h2>
+<hr>
+<h3 id="21-기본-theme-">
+<strong>2.1 기본 Theme</strong> <br>
+</h3>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;resources</span> <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- Base application theme. --&gt;</span>
+    <span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">"Theme.TestApp"</span> <span class="na">parent=</span><span class="s">"Theme.MaterialComponents.DayNight.NoActionBar"</span><span class="nt">&gt;</span>
+        <span class="c">&lt;!-- Primary brand color. --&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"colorPrimary"</span><span class="nt">&gt;</span>@color/purple_500<span class="nt">&lt;/item&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"colorPrimaryVariant"</span><span class="nt">&gt;</span>@color/purple_700<span class="nt">&lt;/item&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"colorOnPrimary"</span><span class="nt">&gt;</span>@color/white<span class="nt">&lt;/item&gt;</span>
+        <span class="c">&lt;!-- Secondary brand color. --&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"colorSecondary"</span><span class="nt">&gt;</span>@color/teal_200<span class="nt">&lt;/item&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"colorSecondaryVariant"</span><span class="nt">&gt;</span>@color/teal_700<span class="nt">&lt;/item&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"colorOnSecondary"</span><span class="nt">&gt;</span>@color/black<span class="nt">&lt;/item&gt;</span>
+        <span class="c">&lt;!-- Status bar color. --&gt;</span>
+        <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"android:statusBarColor"</span> <span class="na">tools:targetApi=</span><span class="s">"l"</span><span class="nt">&gt;</span>?attr/colorPrimaryVariant<span class="nt">&lt;/item&gt;</span>
+        <span class="c">&lt;!-- Customize your theme here. --&gt;</span>
+
+    <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/resources&gt;</span>
+</code></pre></div></div>
+<p>Android 프로젝트를 생성하면 이제는 위와 같은 Theme를 제공한다.<br>
+colorPrimary, textColorPrimary, windowBackground, navigationBarColor 등등<br>
+머티리얼 테마에서 미리 정의가 되어있는 item을 기본 상태로 사용할 수도 있고<br>
+재정의하여 원하는 색으로 적용할 수 있다.<br><br></p>
+
+<p>이것이 가능한 이유는<br>
+안드로이드에서 특정 위치의 색상이 직접 기입된 것이 아니라<br>
+위에서 보이는 테마의 속성을 참조하도록 하였기 때문이다.
+<br><br></p>
+
+<h3 id="22-테마에-해당하는-color파일-생성하기">
+<strong>2.2 테마에 해당하는 Color파일 생성하기</strong><br>
+</h3>
+
+<p>다크모드 , 라이트 모드 에 해당하는 Color 을 배치하는 방법은 간단하다.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/res/values
+</code></pre></div></div>
+<p>기본적으로 color이나 style 파일을 저장하는 values 폴더는 밝은 테마가 기본이며 <br>
+<br></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/res/values-night
+</code></pre></div></div>
+<p>values-night 폴더에 들어가는 같은 이름의 color , style는 다크 테마에 적용된다.
+<br><br></p>
+
+<h3 id="23-테마에-해당하는-image파일-생성하기-">
+<strong>2.3 테마에 해당하는 Image파일 생성하기</strong> <br>
+</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>darwable-hdpi
+</code></pre></div></div>
+<p>위와 같이 기본으로 제공되는 폴더는 밝은 테마에 적용이 되는 이미지이다. <br>
+<br></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>darwable-night-hdpi
+</code></pre></div></div>
+<p>darwable-night 폴더에 들어가는 같은 이름의 Image 는 다크 테마에 적용된다. <br></p>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/52993842/114807402-4d004d80-9de1-11eb-8b08-c15371694a86.png">
+</p>
+<p>위처럼 각 해당하는 폴더에 이미지를 넣으면 테마에 맞춰 적용된다.
+<br><br></p>
+
+<h3 id="24-기본-테마-수정하기-">
+<strong>2.4 기본 테마 수정하기</strong> <br>
+</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;resources</span> <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- Base application theme. --&gt;</span>
+    <span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">"Theme.TestApp"</span> <span class="na">parent=</span><span class="s">"Theme.MaterialComponents.DayNight.NoActionBar"</span><span class="nt">&gt;</span>
+       ...
+
+    <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/resources&gt;</span>
+
+<span class="nt">&lt;resources</span> <span class="na">xmlns:Tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- Base application theme. --&gt;</span>
+    <span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">"Theme.testApp"</span> <span class="na">parent=</span><span class="s">"Theme.MaterialComponents.DayNight.NoActionBar"</span><span class="nt">&gt;</span>
+       ...
+    <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/resources&gt;</span>
+</code></pre></div></div>
+<p>위처럼 제공하는 테마에서 추가를 하고 싶다면 <br>
+values.xml에서 <br></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;resources&gt;</span>
+    <span class="nt">&lt;attr</span> <span class="na">format=</span><span class="s">"color"</span> <span class="na">name=</span><span class="s">"testColor"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/resources&gt;</span>
+</code></pre></div></div>
+
+<p>좌측에 리소스 포맷을 적고 사용될 속성 명을 적는다.<br>
+즉 testColor라는 속성은 color을 가지는 리소스이다.<br><br></p>
+
+<p>이제 themes에서 해당 리소스를 추가한다. <br></p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- Customize your theme here. --&gt;</span>
+<span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">"testColor"</span><span class="nt">&gt;</span>@color/#ff00ff<span class="nt">&lt;/item&gt;</span>
+</code></pre></div></div>
+
+<p>물론 화이트 / 다크 모드에서 적용할 것이기 때문에 두 곳 모두 색에 맞춰 추가한다.<br>
+이제 xml 안에 존재하는 widget에서 사용할 때는<br></p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>android:textColor="?attr/testColor"
+</code></pre></div></div>
+
+<p>위와 같이 사용하면 된다.<br><br></p>
+
+<p>attr 은 뒤에 있는 속성 이름으로 값을 찾아오라는 의미이다.<br>
+내가 지금 다크 테마 상태라면 다크 테마에서 해당 속성 이름의 값 찾아오게 되고<br>
+라이트 테마 상태라면 라이트 테마에서 해당 속성 이름의 값을 찾아온다<br>
+<br><br></p>
+
+<h3 id="24-코드에서-강제로-모드-전환-">
+<strong>2.4 코드에서 강제로 모드 전환</strong> <br>
+</h3>
+
+<p>Android의 설정으로 사용자가 테마를 변경하는것이 아닌
+앱 자체에서 테마를 전환시킬수있다.</p>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nf">setDefaultNightMode</span><span class="p">(</span><span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nc">MODE_NIGHT_NO</span><span class="p">)</span> <span class="c1">//다크모드 사용안함</span>
+<span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nf">setDefaultNightMode</span><span class="p">(</span><span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nc">MODE_NIGHT_YES</span><span class="p">)</span> <span class="c1">// 다크모드</span>
+
+<span class="c1">// Android 설정에 맞추기</span>
+<span class="c1">// 안드로이드 10 이상</span>
+<span class="k">if</span> <span class="p">(</span><span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION</span><span class="p">.</span><span class="nc">SDK_INT</span> <span class="p">&gt;=</span> <span class="nc">Build</span><span class="p">.</span><span class="nc">VERSION_CODES</span><span class="p">.</span><span class="nc">Q</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nf">setDefaultNightMode</span><span class="p">(</span><span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nc">MODE_NIGHT_FOLLOW_SYSTEM</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// 안드로이드 10 미만</span>
+<span class="k">else</span> <span class="p">{</span>
+	<span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nf">setDefaultNightMode</span><span class="p">(</span><span class="nc">AppCompatDelegate</span><span class="p">.</span><span class="nc">MODE_NIGHT_AUTO_BATTERY</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/jekyll-theme-yat/essentialtool/2021/01/25/JIRA-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0.html" title="JIRA 처음 사용하기">JIRA 처음 사용하기</a><a class="next" href="/jekyll-theme-yat/survival/2021/04/15/XamarinForms.html" title="XamarinForm">XamarinForm</a>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        <li><a class="post-link" href="/jekyll-theme-yat/survival/2021/04/15/XamarinForms.html" title="XamarinForm">XamarinForm</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/android/2021/04/29/Context%EA%B0%80-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C.html" title="XamarinForm">Android 에서 Context가 무엇일까</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/android/2021/04/15/AndroiddackMode.html" title="XamarinForm">Android 다크모드 적용하기</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/docker/2020/12/30/%EB%8F%84%EC%BB%A4-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" title="XamarinForm">도커 시작 하기</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        item = items[i]
+        // if (!item.classList.contains('h-h2')) {
+          item.style.display = '';
+        // }
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function (event) {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerHeight = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerHeight) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+      event.preventDefault();
+    });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/jekyll-theme-yat/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+      <div>Copyright © 2021 @k4keye</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/jekyll-theme-yat/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

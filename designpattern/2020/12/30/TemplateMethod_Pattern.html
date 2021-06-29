@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>TemplateMethod Pattern | k4keye의 주니어 개발 일지</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="TemplateMethod Pattern">
+<meta name="author" content="k4keye">
+<meta property="og:locale" content="ko">
+<meta name="description" content="1 TemplateMethod Pattern">
+<meta property="og:description" content="1 TemplateMethod Pattern">
+<link rel="canonical" href="https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/TemplateMethod_Pattern.html">
+<meta property="og:url" content="https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/TemplateMethod_Pattern.html">
+<meta property="og:site_name" content="k4keye의 주니어 개발 일지">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-12-30T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="TemplateMethod Pattern">
+<script type="application/ld+json">
+{"dateModified":"2020-12-30T00:00:00+00:00","datePublished":"2020-12-30T00:00:00+00:00","description":"1 TemplateMethod Pattern","mainEntityOfPage":{"@type":"WebPage","@id":"https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/TemplateMethod_Pattern.html"},"url":"https://k4keye.github.io/jekyll-theme-yat/designpattern/2020/12/30/TemplateMethod_Pattern.html","@type":"BlogPosting","author":{"@type":"Person","name":"k4keye"},"headline":"TemplateMethod Pattern","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/jekyll-theme-yat/assets/css/main.css">
+  <script src="/jekyll-theme-yat/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://k4keye.github.io/jekyll-theme-yat/feed.xml" title="k4keye의 주니어 개발 일지">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/jekyll-theme-yat/">
+  <img class="site-favicon" title="k4keye의 주니어 개발 일지" src="/images/favicon.png" onerror="this.style.display='none'">
+  k4keye의 주니어 개발 일지
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/jekyll-theme-yat/about.html">ABOUT</a><a class="page-link" href="/jekyll-theme-yat/archives.html">ARCHIVES</a><a class="page-link" href="/jekyll-theme-yat/categories.html">CATEGORIES</a><a class="page-link" href="/jekyll-theme-yat/">HOME</a><a class="page-link" href="/jekyll-theme-yat/tags.html">TAGS</a>
+
+
+
+
+<span class="page-link">
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="Franch">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Japan">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russia">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: '',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  (function() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">TemplateMethod Pattern</h1>
+  <h3 class="post-subtitle"></h3>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2020-12-30T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> Dec 30, 2020
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 8 mins</span>
+  </p></header>
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="1-templatemethod-pattern"><strong>1 TemplateMethod Pattern</strong></h2>
+
+<h3 id="11-templatemethod-pattern탬플릿-메소드-패턴"><strong>1.1 TemplateMethod Pattern(탬플릿 메소드 패턴)</strong></h3>
+<p><br>
+어떤 작업을 처리하는 일련의 프로세스를 정의해두고<br>
+서브 클래스가 프로세스에 필요한 역할을 구현하여<br>
+요청하는 입장에서는 프로세스를 호출만을 하게 하여<br>
+프로세스의 변동이 생겨도 요청하는 입장에서는 변동이 없게 하는 패턴이다.<br>
+​
+동일한 기능은 상위 클래스에서 정의하며 확장 혹은 변화가 발생하는 부분만 서브 클래스에 
+<br>구현한다.<br></p>
+
+<p>여기서 프로세스라는 것을 무엇을 의미할까?<br></p>
+
+<p>예로들어 크롤링이라는 주제로 코드를 작성하게된다면 하나의 작업을 수행하는것이아닌<br>
+ 여러 작업을 수행하여 결과를 도출하게될것이다.<br></p>
+
+<p>1). 사이트에 접속한다.</p>
+
+<p>2). 해당 사이트에서 HTML 코드를 가지고온다.</p>
+
+<p>3). 필요로 하는 부분의 문자를 잘라낸다.<br></p>
+
+<p>위와같은 작업을 수행이 모두 마쳐야만 크롤링이라는 작업이 끝나는것일것이다. 여기서 크롤링 작업이 하나의 프로세스이다.<br><br></p>
+
+<h3 id="12-요구-사항"><strong>1.2 요구 사항</strong></h3>
+<p><br>
+위에서는 크롤링을 예로 들었지만 이번에는 로그인이라는 하나의 프로세스를 기준으로 봐보자
+<br><br></p>
+
+<p align="center">
+  <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlXmu2%2FbtqPgGS2gjA%2FkakLwnxGDPvdTNqVl41Lk1%2Fimg.png">
+</p>
+
+<p>위와 같이 로그인을 시도하는 일련의 프로세스가 필요하다고 <br>
+보았을 때 로그인에 필요한 동작들이 존재한다.<br>
+이것이 로그인의 프로세스이다.<br><br></p>
+
+<p align="center">
+  <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbCQ2Ri%2FbtqPaWbHzON%2FFAQLYXXVkA82mMC6LKCQH0%2Fimg.png">
+</p>
+<p><br>
+위의 요구 사항을 바탕으로 로그인이라는 템플릿을 두어 <br>
+로그인 요청 로직은 프로세스 자체를 호출시키기만 하게 한다.</p>
+
+<h2 id="2-실습">2. 실습</h2>
+<hr>
+
+<h3 id="21-코드-구현"><strong>2.1 코드 구현</strong></h3>
+<p><br>
+로그인이라는 하나의 프로세스를 추상 클래스로 구현하였다.<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">LoginConnect</span>
+<span class="o">{</span>
+	<span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">string</span> <span class="nf">PwdSecurity</span><span class="o">(</span><span class="n">string</span> <span class="n">pwd</span><span class="o">);</span> <span class="c1">//패스워드 암호화</span>
+	<span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">string</span> <span class="nf">Connect</span><span class="o">(</span><span class="n">string</span> <span class="n">id</span> <span class="o">,</span><span class="n">string</span> <span class="n">pwd</span><span class="o">);</span> <span class="c1">//로그인 시도</span>
+	<span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">string</span> <span class="nf">Auth</span><span class="o">(</span><span class="n">string</span> <span class="n">userInfo</span><span class="o">);</span> <span class="c1">//권한 확인</span>
+
+	<span class="kd">public</span> <span class="n">string</span> <span class="nf">rquestConnection</span><span class="o">(</span><span class="n">string</span> <span class="n">id</span> <span class="o">,</span> <span class="n">string</span> <span class="n">pwd</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="n">string</span> <span class="nc">SecurityPwd</span> <span class="o">=</span> <span class="nc">PwdSecurity</span><span class="o">(</span><span class="n">pwd</span><span class="o">);</span>
+		<span class="n">string</span> <span class="n">userInfo</span> <span class="o">=</span> <span class="nc">Connect</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="nc">SecurityPwd</span><span class="o">);</span>
+		<span class="n">string</span> <span class="n">userAuth</span> <span class="o">=</span> <span class="nc">Auth</span><span class="o">(</span><span class="n">userInfo</span><span class="o">);</span>
+		<span class="n">string</span> <span class="n">result</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+		<span class="k">switch</span> <span class="o">(</span><span class="n">userAuth</span><span class="o">)</span>
+		<span class="o">{</span>
+			<span class="k">case</span> <span class="s">"일반"</span><span class="o">:</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="s">"일반회원"</span><span class="o">;</span>
+				<span class="k">break</span><span class="o">;</span>
+			<span class="k">case</span> <span class="s">"관리자"</span><span class="o">:</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="s">"관리자"</span><span class="o">;</span>
+				<span class="k">break</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>위의 코드중<br></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">string</span> <span class="nf">PwdSecurity</span><span class="o">(</span><span class="n">string</span> <span class="n">pwd</span><span class="o">);</span> <span class="c1">//패스워드 암호화</span>
+<span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">string</span> <span class="nf">Connect</span><span class="o">(</span><span class="n">string</span> <span class="n">id</span> <span class="o">,</span><span class="n">string</span> <span class="n">pwd</span><span class="o">);</span> <span class="c1">//로그인 시도</span>
+<span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">string</span> <span class="nf">Auth</span><span class="o">(</span><span class="n">string</span> <span class="n">userInfo</span><span class="o">);</span> <span class="c1">//권한 확인</span>
+</code></pre></div></div>
+<p>이 부분은 서브 클래스가 구현하게 되고<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">string</span> <span class="nf">rquestConnection</span><span class="o">(</span><span class="n">string</span> <span class="n">id</span> <span class="o">,</span> <span class="n">string</span> <span class="n">pwd</span><span class="o">)</span>
+</code></pre></div></div>
+<p>이 부분은 로그인 프로세스가 필요한 로직이 호출하게 한다.<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">NormalLogin</span> <span class="o">:</span> <span class="nc">LoginConnect</span>
+<span class="o">{</span>
+	<span class="kd">protected</span> <span class="n">override</span> <span class="n">string</span> <span class="nf">PwdSecurity</span><span class="o">(</span><span class="n">string</span> <span class="n">pwd</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"패스워드 암호화 작업"</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">pwd</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="kd">protected</span> <span class="n">override</span> <span class="n">string</span> <span class="nf">Connect</span><span class="o">(</span><span class="n">string</span> <span class="n">id</span><span class="o">,</span> <span class="n">string</span> <span class="n">pwd</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"로그인 시도후 로그인 정보 반환"</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"userinfoAdmin"</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="kd">protected</span> <span class="n">override</span> <span class="n">string</span> <span class="nf">Auth</span><span class="o">(</span><span class="n">string</span> <span class="n">userInfo</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="s">"로그인 정보를 통해 권한 반환"</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"관리자"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<p>서브 클래스를 두어 프로세스에 필요한 각 로직을 구현한다.<br></p>
+
+<p>이렇게 되면<br></p>
+
+<p>프로세스를 호출하는 쪽에서는<br>
+rquestConnection() 메서드만을 호출하게 되고<br>
+나머지 로그인에 필요한 작업은 서브 클래스가 위임하여 처리하게 된다.<br></p>
+
+<p>즉 호출하는 쪽에서는 이제 로그인 프로세스가 확장 혹은 변화가 생기더라도 호출하는 방법을 바꿀 필요가 없다.<br></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LoginConnect</span> <span class="n">loginConnect</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NormalLogin</span><span class="o">();</span>
+<span class="nc">Console</span><span class="o">.</span><span class="na">WriteLine</span><span class="o">(</span><span class="n">loginConnect</span><span class="o">.</span><span class="na">rquestConnection</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="s">"pwd"</span><span class="o">));</span>
+</code></pre></div></div>
+<p><br></p>
+
+<p align="center">
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Flc4On%2FbtqPnaltdN7%2F7w67R8WGnpuMjVOgfZ72CK%2Fimg.png">
+</p>
+
+<h3 id="22-예제-코드"><strong>2.2 예제 코드</strong></h3>
+<p><br></p>
+
+<p><a href="https://github.com/k4keye/DesignPattern">예제 코드 Git 주소</a></p>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/jekyll-theme-yat/designpattern/2020/12/30/Strategy_Pattern.html" title="Strategy Pattern">Strategy Pattern</a><a class="next" href="/jekyll-theme-yat/docker/2020/12/30/%EB%8F%84%EC%BB%A4-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" title="도커 시작 하기">도커 시작 하기</a>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        <li><a class="post-link" href="/jekyll-theme-yat/android/2021/05/01/Android_inflation.html" title="도커 시작 하기">Android inflation 란</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/android/2021/04/26/Retrofit-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-API-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0.html" title="도커 시작 하기">Retrofit 사용하여 API 호출하기</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/aws/2020/12/30/AWS1.html" title="도커 시작 하기">AWS 서버 아키텍처 구축하기 - 1</a></li>
+<li><a class="post-link" href="/jekyll-theme-yat/essentialtool/2020/12/30/%EC%A3%BC%EB%8B%88%EC%96%B4-%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98-%ED%95%84%EC%88%98%EB%8F%84%EA%B5%AC-Git.html" title="도커 시작 하기">주니어 개발자의 필수도구 Git</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        item = items[i]
+        // if (!item.classList.contains('h-h2')) {
+          item.style.display = '';
+        // }
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function (event) {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerHeight = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerHeight) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+      event.preventDefault();
+    });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/jekyll-theme-yat/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+      <div>Copyright © 2021 @k4keye</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/jekyll-theme-yat/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
